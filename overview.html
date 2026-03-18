@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agentic AI DevOps Platform Blueprint</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Chosen Palette: Warm Neutrals (Alabaster background #faf9f6, Slate text #334155, Warm Amber accents #d97706, Soft Sage secondary #9ca3af) -->
+    <!-- Application Structure Plan: The SPA is structured as an interactive technical blueprint dashboard. It uses a sidebar navigation for quick access to distinct architectural components. The sections are logical groupings derived from the report: Vision (Overview), The Swarm (Agents), Capabilities (Modules), Stack (Tech Analysis), and Execution (Interactive Workflow). This structure allows a user (e.g., a technical stakeholder) to digest a dense system architecture non-linearly, exploring specific technical depths on demand rather than reading a linear document. -->
+    <!-- Visualization & Content Choices: 
+         - Architecture Layers: CSS Flexbox blocks (Goal: Organize. No SVG used, pure layout).
+         - Agent Swarm: Interactive List/Detail view (Goal: Inform/Organize. Allows deep dive without clutter).
+         - System Modules: Grid of Cards (Goal: Organize. Scannable feature list).
+         - Tech Stack: Chart.js Doughnut (Goal: Inform/Proportions. Visualizes tool distribution. Canvas used).
+         - Execution Workflow: Step-by-step interactive timeline (Goal: Change/Process. Demonstrates the dynamic nature of the system). 
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            background-color: #faf9f6;
+            color: #334155;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            overflow-x: hidden;
+        }
+        
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px;
+            max-height: 400px;
+        }
+        
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+
+        .nav-item.active {
+            background-color: #fce7f3;
+            color: #be185d;
+            border-right: 4px solid #be185d;
+        }
+
+        .step-active {
+            border-color: #d97706;
+            background-color: #fef3c7;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .arch-layer {
+            transition: transform 0.2s;
+        }
+        .arch-layer:hover {
+            transform: scale(1.02);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body class="flex h-screen antialiased">
+
+    <aside class="w-64 bg-white border-r border-gray-200 flex flex-col h-full fixed sm:relative z-20 transition-transform transform -translate-x-full sm:translate-x-0" id="sidebar">
+        <div class="p-6 border-b border-gray-200">
+            <h1 class="text-xl font-bold text-gray-800 flex items-center gap-2">
+                <span class="text-2xl">🧠</span> AI DevOps
+            </h1>
+            <p class="text-xs text-gray-500 mt-1">Platform Architecture V1</p>
+        </div>
+        <nav class="flex-1 overflow-y-auto py-4">
+            <ul class="space-y-1">
+                <li><button onclick="nav('overview')" id="nav-overview" class="w-full text-left px-6 py-3 text-sm font-medium hover:bg-gray-50 nav-item active">Overview</button></li>
+                <li><button onclick="nav('agents')" id="nav-agents" class="w-full text-left px-6 py-3 text-sm font-medium hover:bg-gray-50 nav-item">The Agent Swarm</button></li>
+                <li><button onclick="nav('modules')" id="nav-modules" class="w-full text-left px-6 py-3 text-sm font-medium hover:bg-gray-50 nav-item">System Modules</button></li>
+                <li><button onclick="nav('stack')" id="nav-stack" class="w-full text-left px-6 py-3 text-sm font-medium hover:bg-gray-50 nav-item">Technology Stack</button></li>
+                <li><button onclick="nav('workflow')" id="nav-workflow" class="w-full text-left px-6 py-3 text-sm font-medium hover:bg-gray-50 nav-item">Execution Workflow</button></li>
+            </ul>
+        </nav>
+    </aside>
+
+    <main class="flex-1 h-full overflow-y-auto bg-[#faf9f6]">
+        
+        <button onclick="document.getElementById('sidebar').classList.toggle('-translate-x-full')" class="sm:hidden fixed bottom-4 right-4 bg-gray-800 text-white p-3 rounded-full shadow-lg z-50">
+            <span>☰</span>
+        </button>
+
+        <div class="max-w-6xl mx-auto p-8 pt-12 pb-24">
+
+            <section id="sec-overview" class="block fade-in">
+                <div class="mb-12">
+                    <h2 class="text-4xl font-bold text-gray-900 mb-4">Agentic AI DevOps Platform</h2>
+                    <p class="text-lg text-gray-600 mb-6 leading-relaxed">
+                        Welcome to the interactive blueprint of the next-generation, self-operating DevOps environment. This section outlines the core vision and high-level architecture. The goal is a system where a multi-agent AI orchestration layer proactively manages, heals, and deploys infrastructure and applications at scale.
+                    </p>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+                        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 border-t-4 border-t-amber-500">
+                            <h3 class="font-bold text-gray-800 mb-2">Autonomous Detection</h3>
+                            <p class="text-sm text-gray-600">Continuous monitoring via Prometheus/ELK to identify anomalies before they become critical failures.</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 border-t-4 border-t-emerald-500">
+                            <h3 class="font-bold text-gray-800 mb-2">Intelligent Remediation</h3>
+                            <p class="text-sm text-gray-600">AI-driven root cause analysis and automated deployment of fixes without human intervention.</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 border-t-4 border-t-blue-500">
+                            <h3 class="font-bold text-gray-800 mb-2">Generative Infra</h3>
+                            <p class="text-sm text-gray-600">Translating natural language requests into production-ready Terraform and Kubernetes manifests.</p>
+                        </div>
+                    </div>
+
+                    <h3 class="text-2xl font-bold mb-6">High-Level Architecture</h3>
+                    <div class="bg-white p-8 rounded-xl shadow-sm border border-gray-200">
+                        <div class="flex flex-col gap-4 relative">
+                            <div class="arch-layer bg-gray-800 text-white p-4 rounded text-center font-bold">ChatGPT-like Dashboard (React UI)</div>
+                            <div class="flex justify-center text-gray-400">↕️</div>
+                            <div class="arch-layer bg-blue-100 text-blue-800 border border-blue-200 p-4 rounded text-center font-bold">API / Orchestration Layer (FastAPI)</div>
+                            <div class="flex justify-center text-gray-400">↕️</div>
+                            <div class="arch-layer bg-amber-100 text-amber-800 border border-amber-200 p-6 rounded text-center font-bold relative">
+                                LangChain Multi-Agent Swarm
+                                <div class="text-xs font-normal mt-2 flex justify-center gap-2 flex-wrap">
+                                    <span class="bg-white px-2 py-1 rounded">RCA Agent</span>
+                                    <span class="bg-white px-2 py-1 rounded">Deploy Agent</span>
+                                    <span class="bg-white px-2 py-1 rounded">Sec Agent</span>
+                                </div>
+                            </div>
+                            <div class="flex justify-between px-10 text-gray-400">
+                                <div>↙️</div>
+                                <div>↓</div>
+                                <div>↘️</div>
+                            </div>
+                            <div class="grid grid-cols-3 gap-4">
+                                <div class="arch-layer bg-emerald-50 text-emerald-800 border border-emerald-200 p-4 rounded text-center text-sm font-bold">Observability<br><span class="text-xs font-normal">ELK, Prometheus</span></div>
+                                <div class="arch-layer bg-purple-50 text-purple-800 border border-purple-200 p-4 rounded text-center text-sm font-bold">CI/CD Pipeline<br><span class="text-xs font-normal">GitHub Actions</span></div>
+                                <div class="arch-layer bg-orange-50 text-orange-800 border border-orange-200 p-4 rounded text-center text-sm font-bold">Infrastructure<br><span class="text-xs font-normal">AWS, K8s, Terraform</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="sec-agents" class="hidden fade-in">
+                <div class="mb-8">
+                    <h2 class="text-4xl font-bold text-gray-900 mb-4">The Agent Swarm</h2>
+                    <p class="text-lg text-gray-600 mb-6">
+                        This section details the critical multi-agent AI setup. Instead of a monolithic AI, specific agents handle specialized tasks. Select an agent from the list below to explore its specific goal, inputs, outputs, and logic within the platform.
+                    </p>
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        <div class="lg:col-span-1 bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                            <ul id="agent-list" class="divide-y divide-gray-100">
+                            </ul>
+                        </div>
+                        <div class="lg:col-span-2 bg-white rounded-xl shadow-sm border border-gray-200 p-8 min-h-[400px]" id="agent-detail-panel">
+                            <div class="text-center text-gray-400 mt-20">
+                                <span class="text-4xl block mb-2">👈</span>
+                                Select an agent to view details
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="sec-modules" class="hidden fade-in">
+                <div class="mb-8">
+                    <h2 class="text-4xl font-bold text-gray-900 mb-4">System Modules</h2>
+                    <p class="text-lg text-gray-600 mb-6">
+                        The platform comprises nine distinct but integrated modules. This grid outlines the core capabilities of each module and the underlying technologies that power them. Hover over the cards for a brief overview.
+                    </p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6" id="modules-grid">
+                    </div>
+                </div>
+            </section>
+
+            <section id="sec-stack" class="hidden fade-in">
+                <div class="mb-8">
+                    <h2 class="text-4xl font-bold text-gray-900 mb-4">Technology Stack Distribution</h2>
+                    <p class="text-lg text-gray-600 mb-6">
+                        This section visualizes the technological foundation required to build this system. The chart below categorizes the required tools and frameworks into domains like Cloud Infrastructure, Observability, and AI Orchestration.
+                    </p>
+                    <div class="bg-white p-8 rounded-xl shadow-sm border border-gray-200">
+                        <div class="chart-container">
+                            <canvas id="techStackChart"></canvas>
+                        </div>
+                        <div class="mt-8 grid grid-cols-2 md:grid-cols-4 gap-4 text-sm" id="tech-legend-text">
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="sec-workflow" class="hidden fade-in">
+                <div class="mb-8">
+                    <h2 class="text-4xl font-bold text-gray-900 mb-4">Autonomous Execution Workflow</h2>
+                    <p class="text-lg text-gray-600 mb-6">
+                        Experience a simulated scenario demonstrating how the AI agents collaborate during an incident. Click 'Next Step' to trace the system's reaction from initial failure detection to automated resolution.
+                    </p>
+                    
+                    <div class="flex flex-col md:flex-row gap-8">
+                        <div class="w-full md:w-1/3">
+                            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 sticky top-4">
+                                <h3 class="font-bold text-lg mb-4">Simulation Controls</h3>
+                                <button onclick="nextStep()" class="w-full bg-gray-800 text-white font-bold py-3 px-4 rounded hover:bg-gray-700 transition duration-200 mb-4">
+                                    Next Step ⏩
+                                </button>
+                                <button onclick="resetWorkflow()" class="w-full bg-white text-gray-600 border border-gray-300 font-bold py-2 px-4 rounded hover:bg-gray-50 transition duration-200">
+                                    Reset
+                                </button>
+                                <div class="mt-6 p-4 bg-gray-50 rounded border border-gray-100">
+                                    <h4 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Current Context</h4>
+                                    <p id="workflow-context" class="text-sm text-gray-700">Waiting to start simulation...</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="w-full md:w-2/3">
+                            <div class="relative border-l-2 border-gray-200 ml-3" id="workflow-timeline">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <script>
+        const agentsData = [
+            { id: 'log', icon: '📝', name: 'Log Analysis Agent', goal: 'Continuously parse and semantically understand high-volume log streams (ELK/Loki).', inputs: 'Application logs, System logs, Error stack traces.', outputs: 'Structured anomaly reports, Error categorization tags.', logic: 'Uses regex for initial parsing, then passes anomalous chunks to LLM to explain the error context.' },
+            { id: 'metrics', icon: '📈', name: 'Metrics Analysis Agent', goal: 'Monitor time-series data to detect baseline deviations before service disruption.', inputs: 'Prometheus metrics (CPU, Memory, Request latency, Error rates).', outputs: 'Alert confidence scores, Trend predictions.', logic: 'Applies statistical anomaly detection. If threshold crossed, triggers RCA Agent.' },
+            { id: 'rca', icon: '🔍', name: 'Root Cause Analysis Agent', goal: 'Synthesize data across domains to pinpoint the exact origin of a failure.', inputs: 'Outputs from Log Agent & Metrics Agent, OpenTelemetry traces.', outputs: 'Root cause hypothesis, Confidence percentage, Remediation suggestion.', logic: 'Acts as a reasoning engine. Correlates a CPU spike (Metrics) with an OutOfMemory exception (Logs) tied to a specific Trace ID.' },
+            { id: 'deploy', icon: '🚀', name: 'Deployment Agent', goal: 'Manage application rollouts and implement automated rollbacks if health checks fail.', inputs: 'CI/CD pipeline triggers, Health check statuses, Current K8s state.', outputs: 'Kubernetes patch commands, Rollback execution, Slack notifications.', logic: 'Selects strategy (e.g., Canary). Monitors metrics during rollout. If error rate > 2%, aborts and reverts via ArgoCD/Kubernetes API.' },
+            { id: 'sec', icon: '🛡️', name: 'Security Agent', goal: 'Continuously scan configurations and code for vulnerabilities and suggest patches.', inputs: 'Trivy/Snyk scan results, Terraform configs, Dockerfiles.', outputs: 'Remediation pull requests, Security posture score.', logic: 'Matches CVEs to code context using LLM to generate precise fix instructions or automated PRs.' },
+            { id: 'infra', icon: '🏗️', name: 'Infrastructure Agent', goal: 'Maintain desired state of infrastructure and handle generative provisioning requests.', inputs: 'Natural language requests (e.g., "Need an S3 bucket"), CloudWatch alerts.', outputs: 'Terraform code, AWS API calls for self-healing.', logic: 'Uses context-aware code generation for new infra. For healing, if EC2 fails health check, triggers Lambda to recycle resource based on Terraform state.' }
+        ];
+
+        const modulesData = [
+            { title: 'Agentic AI Assistant', desc: 'Core orchestration layer communicating with logs, metrics, and CI/CD.', tech: 'LangChain, OpenAI, K8s' },
+            { title: 'Self-Healing CI/CD', desc: 'Detects pipeline failures, analyzes logs, and automatically retries with fixes.', tech: 'GitHub Actions, Python, LLMs' },
+            { title: 'GenAI Infra Generator', desc: 'Converts natural language ("Deploy App on AWS") into modular IaC.', tech: 'OpenAI API, Terraform' },
+            { title: 'RCA System', desc: 'Correlates logs, metrics, and traces to identify failure origins using AI reasoning.', tech: 'Prometheus, OpenTelemetry, LLM' },
+            { title: 'Autonomous Deployment', desc: 'Manages progressive rollouts (canary/blue-green) with auto-rollback capability.', tech: 'Kubernetes, Argo Rollouts' },
+            { title: 'Self-Healing Infra', desc: 'Detects cloud resource failures and automatically recreates them to maintain state.', tech: 'AWS Lambda, CloudWatch, Terraform' },
+            { title: 'DevSecOps Pipeline', desc: 'Scans for vulnerabilities and auto-generates patch code using AI.', tech: 'Snyk, Trivy, CI/CD' },
+            { title: 'Predictive Monitoring', desc: 'Uses ML to forecast failures before they impact production.', tech: 'Prometheus, Time-series ML' },
+            { title: 'Chat DevOps Dashboard', desc: 'Natural language interface to query system health, logs, and deployment status.', tech: 'React, FastAPI, ELK' }
+        ];
+
+        const workflowSteps = [
+            { title: 'Pipeline Execution', desc: 'Developer merges code. GitHub Actions triggers the deployment pipeline.', context: 'System Normal. Deployment initiated.' },
+            { title: 'Deployment Failure', desc: 'Kubernetes deployment fails due to a configuration error causing CrashLoopBackOff.', context: 'Alert triggered. Service unavailable.' },
+            { title: 'Agent Detection', desc: 'Metrics Agent notes 0% available pods. Log Agent captures "Invalid ConfigMap" error.', context: 'Agents gathering telemetry data.' },
+            { title: 'AI RCA Generation', desc: 'RCA Agent correlates the failed pod logs with the recent pipeline commit.', context: 'Hypothesis formed: Typo in ConfigMap YAML.' },
+            { title: 'Fix Suggestion', desc: 'Agent formulates a git patch correcting the YAML syntax error.', context: 'Automated remediation generated.' },
+            { title: 'Auto-Remediation', desc: 'System automatically commits the fix to a new branch and triggers the pipeline.', context: 'Self-healing process in motion.' },
+            { title: 'System Verified', desc: 'New deployment succeeds. Deployment Agent verifies health metrics are nominal.', context: 'Resolution complete. Back to normal.' }
+        ];
+
+        const stackCategories = {
+            'AI & Logic': ['LangChain', 'OpenAI API', 'Python Agents', 'FastAPI'],
+            'Cloud & Infra': ['AWS (EKS, EC2, S3)', 'Terraform', 'Kubernetes'],
+            'CI/CD & Deploy': ['GitHub Actions', 'Jenkins', 'Argo Rollouts'],
+            'Observability': ['Prometheus', 'Grafana', 'ELK Stack', 'OpenTelemetry'],
+            'Security': ['Snyk', 'Trivy', 'AWS Secrets Manager']
+        };
+
+        function nav(sectionId) {
+            document.querySelectorAll('main > div > section').forEach(el => {
+                el.classList.add('hidden');
+            });
+            document.getElementById('sec-' + sectionId).classList.remove('hidden');
+
+            document.querySelectorAll('.nav-item').forEach(el => {
+                el.classList.remove('active', 'bg-fce7f3', 'text-be185d', 'border-r-4');
+            });
+            document.getElementById('nav-' + sectionId).classList.add('active');
+            
+            if(window.innerWidth < 640) {
+                document.getElementById('sidebar').classList.add('-translate-x-full');
+            }
+
+            if(sectionId === 'stack' && !window.chartRendered) {
+                renderChart();
+                window.chartRendered = true;
+            }
+        }
+
+        function initAgents() {
+            const list = document.getElementById('agent-list');
+            agentsData.forEach(agent => {
+                const li = document.createElement('li');
+                li.innerHTML = `<button onclick="showAgent('${agent.id}')" class="w-full text-left p-4 hover:bg-gray-50 transition flex items-center gap-3 border-l-4 border-transparent focus:outline-none" id="btn-agent-${agent.id}">
+                                    <span class="text-2xl">${agent.icon}</span>
+                                    <span class="font-semibold text-gray-700">${agent.name}</span>
+                                </button>`;
+                list.appendChild(li);
+            });
+        }
+
+        function showAgent(id) {
+            document.querySelectorAll('#agent-list button').forEach(btn => btn.classList.replace('border-amber-500', 'border-transparent'));
+            document.getElementById(`btn-agent-${id}`).classList.replace('border-transparent', 'border-amber-500');
+            document.getElementById(`btn-agent-${id}`).classList.add('bg-gray-50');
+
+            const agent = agentsData.find(a => a.id === id);
+            const panel = document.getElementById('agent-detail-panel');
+            panel.innerHTML = `
+                <div class="fade-in">
+                    <div class="flex items-center gap-4 mb-6">
+                        <span class="text-5xl">${agent.icon}</span>
+                        <h3 class="text-3xl font-bold text-gray-800">${agent.name}</h3>
+                    </div>
+                    <div class="space-y-6">
+                        <div>
+                            <h4 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Primary Goal</h4>
+                            <p class="text-gray-700 text-lg bg-amber-50 p-4 rounded-lg border border-amber-100">${agent.goal}</p>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="bg-gray-50 p-4 rounded border border-gray-100">
+                                <h4 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Inputs</h4>
+                                <p class="text-sm text-gray-600">${agent.inputs}</p>
+                            </div>
+                            <div class="bg-gray-50 p-4 rounded border border-gray-100">
+                                <h4 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Outputs</h4>
+                                <p class="text-sm text-gray-600">${agent.outputs}</p>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Decision Logic</h4>
+                            <p class="text-sm text-gray-600 font-mono bg-gray-800 text-gray-200 p-4 rounded shadow-inner">${agent.logic}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function initModules() {
+            const grid = document.getElementById('modules-grid');
+            modulesData.forEach(mod => {
+                grid.innerHTML += `
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition cursor-default flex flex-col h-full">
+                        <h3 class="text-lg font-bold text-gray-800 mb-2">${mod.title}</h3>
+                        <p class="text-sm text-gray-600 flex-grow mb-4">${mod.desc}</p>
+                        <div class="mt-auto pt-4 border-t border-gray-100">
+                            <span class="text-xs font-mono text-amber-600 bg-amber-50 px-2 py-1 rounded">Tech: ${mod.tech}</span>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        let chartInstance = null;
+        function renderChart() {
+            const ctx = document.getElementById('techStackChart').getContext('2d');
+            const labels = Object.keys(stackCategories);
+            const dataCounts = labels.map(label => stackCategories[label].length);
+            
+            const colors = ['#d97706', '#0ea5e9', '#10b981', '#8b5cf6', '#ef4444'];
+
+            if(chartInstance) chartInstance.destroy();
+
+            chartInstance = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: dataCounts,
+                        backgroundColor: colors,
+                        borderWidth: 0,
+                        hoverOffset: 10
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'right', labels: { font: { family: "'Segoe UI', sans-serif" } } },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.label || '';
+                                    return ` ${label}: ${stackCategories[label].length} Tools`;
+                                }
+                            }
+                        }
+                    },
+                    cutout: '70%'
+                }
+            });
+
+            const legendText = document.getElementById('tech-legend-text');
+            legendText.innerHTML = '';
+            labels.forEach((label, index) => {
+                const tools = stackCategories[label].join(', ');
+                legendText.innerHTML += `
+                    <div>
+                        <div class="flex items-center gap-2 mb-1">
+                            <span class="w-3 h-3 rounded-full" style="background-color:${colors[index]}"></span>
+                            <span class="font-bold text-gray-700">${label}</span>
+                        </div>
+                        <p class="text-xs text-gray-500 pl-5">${tools}</p>
+                    </div>
+                `;
+            });
+        }
+
+        let currentStep = -1;
+        function initWorkflow() {
+            const timeline = document.getElementById('workflow-timeline');
+            timeline.innerHTML = '';
+            workflowSteps.forEach((step, index) => {
+                timeline.innerHTML += `
+                    <div class="mb-8 relative pl-8 transition duration-300 opacity-50" id="step-${index}">
+                        <div class="absolute w-4 h-4 bg-gray-200 rounded-full -left-[9px] top-1 border-2 border-white transition duration-300" id="step-dot-${index}"></div>
+                        <h4 class="font-bold text-gray-800 text-lg mb-1">${index + 1}. ${step.title}</h4>
+                        <p class="text-sm text-gray-600">${step.desc}</p>
+                    </div>
+                `;
+            });
+        }
+
+        function nextStep() {
+            if (currentStep < workflowSteps.length - 1) {
+                currentStep++;
+                
+                if (currentStep > 0) {
+                    document.getElementById(`step-dot-${currentStep - 1}`).classList.replace('bg-amber-500', 'bg-gray-400');
+                }
+
+                const stepEl = document.getElementById(`step-${currentStep}`);
+                const dotEl = document.getElementById(`step-dot-${currentStep}`);
+                
+                stepEl.classList.remove('opacity-50');
+                dotEl.classList.replace('bg-gray-200', 'bg-amber-500');
+                dotEl.classList.add('ring-4', 'ring-amber-100');
+
+                document.getElementById('workflow-context').innerText = workflowSteps[currentStep].context;
+                document.getElementById('workflow-context').classList.add('fade-in');
+                setTimeout(() => document.getElementById('workflow-context').classList.remove('fade-in'), 300);
+                
+                stepEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+        }
+
+        function resetWorkflow() {
+            currentStep = -1;
+            document.getElementById('workflow-context').innerText = "Waiting to start simulation...";
+            initWorkflow();
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initAgents();
+            initModules();
+            initWorkflow();
+            nav('overview'); 
+        });
+    </script>
+</body>
+</html>
